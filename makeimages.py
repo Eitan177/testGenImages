@@ -19,6 +19,7 @@ import urllib
 from os.path import exists
 import time
 from generate import *
+from streamlit import caching
 
 
 file_exists = exists("network-snapshot-025000.pkl")
@@ -35,7 +36,7 @@ seeds =[int(ii) for ii in np.absolute(np.random.randn(num))*100]
 generate_images(easing='linear',interpolation='linear',increment=.01,network_pkl='network-snapshot-025000.pkl',process='image',random_seed=0,diameter=100.0,scale_type='pad',seeds=seeds,space='z',truncation_psi=1,noise_mode='const',outdir='.',class_idx=nummake,size=False,frames=240,fps=24,start=0.0,stop=1.0,projected_w=None)
         ##os.system("python generate.py --outdir=. --seeds="+str(0)+"-"+str(9)+" --class="+str(ii)+' --network=network-snapshot-025000.pkl')
 
-st.clear_cache()
+caching.clear_cache()
 for mm in glob("*.png"):
     print(mm)
     im=Image.open(mm)
