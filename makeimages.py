@@ -21,7 +21,7 @@ from generate import *
 
 st.legacy_caching.clear_cache()
 file_exists = exists("network-snapshot-025000.pkl")
-st.write('the network file exists: '+file_exists)
+st.write('the network file exists: '+str(file_exists))
 tcga_w_annot=pd.read_csv('tcga_labels_to_num.csv')
 if file_exists != True:
     url="https://drive.google.com/u/0/uc?id=1XUYsXdSGVTTaQPR1TujMwRIVn94H6CuG&export=download"
