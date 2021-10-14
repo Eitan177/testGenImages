@@ -16,6 +16,7 @@ from PIL import Image
 import streamlit as st
 import urllib
 from os.path import exists
+import time
 from generate import *
 
 st.legacy_caching.clear_cache()
@@ -36,5 +37,6 @@ for mm in glob("*.png"):
     im=Image.open(mm)
     st.image(im)
 os.system('rm *png')
+st.write(glob("*png"))
 st.spinner('give this a few seconds...')
-st.sleep(10)
+time.sleep(10)
