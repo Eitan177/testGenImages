@@ -18,7 +18,7 @@ import urllib
 from os.path import exists
 from generate import *
 
-st.legacy_caching.clear_cache.clear_cache()
+st.legacy_caching.clear_cache()
 file_exists = exists("network-snapshot-025000.pkl")
 if file_exists != True:
     url="https://drive.google.com/u/0/uc?id=1XUYsXdSGVTTaQPR1TujMwRIVn94H6CuG&export=download"
