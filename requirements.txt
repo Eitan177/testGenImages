@@ -110,7 +110,7 @@ Send2Trash==1.8.0
 singletons==0.2.5
 six==1.15.0
 smmap==4.0.0
-streamlit==0.88
+streamlit==1.0.0
 tables==3.6.1
 
 termcolor==1.1.0
