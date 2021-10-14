@@ -455,6 +455,7 @@ def generate_images(
         # convert to video
         cmd=f'ffmpeg -y -r {fps} -i {dirpath}/frame%04d.png -vcodec libx264 -pix_fmt yuv420p {outdir}/{vidname}.mp4'
         subprocess.call(cmd, shell=True)
+        del network_pkl
 
 #----------------------------------------------------------------------------
 
