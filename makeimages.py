@@ -18,7 +18,7 @@ from os.path import exists
 
 file_exists = exists("network-snapshot-025000.pkl")
 
-if !file_exists:
+if file_exists != True:
     url="https://livejohnshopkins-my.sharepoint.com/personal/ehalper2_jh_edu/Documents/network-snapshot-025000.pkl"
     urllib.request.urlretrieve(url,"network-snapshot-025000.pkl")
 make=st.button('make images')
