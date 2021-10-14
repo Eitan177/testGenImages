@@ -426,7 +426,7 @@ def generate_images(
     label = torch.zeros([1, G.c_dim], device=device)
     if G.c_dim != 0:
         if class_idx is None:
-            ctx.fail('Must specify class label with --class when using a conditional network')
+            print('Must specify class label with --class when using a conditional network')
         label[:, class_idx] = 1
     else:
         if class_idx is not None:
@@ -435,7 +435,7 @@ def generate_images(
 
     if(process=='image'):
         if seeds is None:
-            ctx.fail('--seeds option is required when not using --projected-w')
+            print('--seeds option is required when not using --projected-w')
 
         # Generate images.
         for seed_idx, seed in enumerate(seeds):
