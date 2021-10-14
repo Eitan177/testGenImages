@@ -16,6 +16,7 @@ from PIL import Image
 import streamlit as st
 import urllib
 from os.path import exists
+import generate
 
 file_exists = exists("network-snapshot-025000.pkl")
 if file_exists != True:
@@ -25,10 +26,63 @@ if file_exists != True:
 make=st.button('make images')
 
 
+@click.command()
+@click.pass_context
+@click.option('--network', 'network_pkl', help='Network pickle filename', required=True)
+@click.option('--seeds', type=num_range, help='List of random seeds')
+@click.option('--trunc', 'truncation_psi', type=float, help='Truncation psi', default=1, show_default=True)
+@click.option('--class', 'class_idx', type=int, help='Class label (unconditional if not specified)')
+@click.option('--diameter', type=float, help='diameter of loops', default=100.0, show_default=True)
+@click.option('--frames', type=int, help='how many frames to produce (with seeds this is frames between each step, with loops this is total length)', default=240, show_default=True)
+@click.option('--fps', type=int, help='framerate for video', default=24, show_default=True)
+@click.option('--increment', type=float, help='truncation increment value', default=0.01, show_default=True)
+@click.option('--interpolation', type=click.Choice(['linear', 'slerp', 'noiseloop', 'circularloop']), default='linear', help='interpolation type', required=True)
+@click.option('--easing',
+              type=click.Choice(['linear', 'easeInOutQuad', 'bounceEaseOut','circularEaseOut','circularEaseOut2']),
+              default='linear', help='easing method', required=True)
+@click.option('--network', 'network_pkl', help='Network pickle filename', required=True)
+@click.option('--noise-mode', help='Noise mode', type=click.Choice(['const', 'random', 'none']), default='const', show_default=True)
+@click.option('--outdir', help='Where to save the output images', type=str, required=True, metavar='DIR')
+@click.option('--process', type=click.Choice(['image', 'interpolation','truncation','interpolation-truncation']), default='image', help='generation method', required=True)
+@click.option('--projected-w', help='Projection result file', type=str, metavar='FILE')
+@click.option('--random_seed', type=int, help='random seed value (used in noise and circular loop)', default=0, show_default=True)
+@click.option('--scale-type',
+                type=click.Choice(['pad', 'padside', 'symm','symmside']),
+                default='pad', help='scaling method for --size', required=False)
+@click.option('--size', type=size_range, help='size of output (in format x-y)')
+@click.option('--seeds', type=num_range, help='List of random seeds')
+@click.option('--space', type=click.Choice(['z', 'w']), default='z', help='latent space', required=True)
+@click.option('--start', type=float, help='starting truncation value', default=0.0, show_default=True)
+@click.option('--stop', type=float, help='stopping truncation value', default=1.0, show_default=True)
+@click.option('--trunc', 'truncation_psi', type=float, help='Truncation psi', default=1, show_default=True)
+
+
+easing: str,
+    interpolation: str,
+    increment: Optional[float],
+    network_pkl: str,
+    process: str,
+    random_seed: Optional[int],
+    diameter: Optional[float],
+    scale_type: Optional[str],
+    size: Optional[List[int]],
+    seeds: Optional[List[int]],
+    space: str,
+    fps: Optional[int],
+    frames: Optional[int],
+    truncation_psi: float,
+    noise_mode: str,
+    outdir: str,
+    class_idx: Optional[int],
+    projected_w: Optional[str],
+    start: Optional[float],
+    stop: Optional[float],
+
 if make:
 
     for ii in np.arange(1,2):
-        os.system("python generate.py --outdir=. --seeds="+str(0)+"-"+str(9)+" --class="+str(ii)+' --network=network-snapshot-025000.pkl')
+        generate_images('linear',.01,'network-snapshot-025000.pkl','image',0,100.0,'pad',seeds=[0,1,2,3],space='z',truncation_psi=1,noise_mode='const',outdir='.',class_idx=ii)
+        ##os.system("python generate.py --outdir=. --seeds="+str(0)+"-"+str(9)+" --class="+str(ii)+' --network=network-snapshot-025000.pkl')
 
 
 for mm in glob("*.png"):
