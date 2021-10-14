@@ -10,6 +10,7 @@ from tqdm import tqdm
 from matplotlib import pyplot as plt
 import tensorflow as tf
 from glob import glob
+import sys
 from skimage.transform import rescale, resize, downscale_local_mean
 from keras.models import model_from_json
 from PIL import Image
@@ -40,6 +41,4 @@ for mm in glob("*.png"):
     im=Image.open(mm)
     st.image(im)
 os.system('rm *png')
-st.write(glob("*png"))
-st.spinner('give this a few seconds...')
-time.sleep(10)
+sys.modules[__name__].__dict__.clear()
