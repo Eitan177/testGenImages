@@ -2,7 +2,7 @@ from typing import Pattern
 import numpy as np
 import pandas as pd
 import pdb
-
+import gdown
 import os
 from glob import glob
 from tqdm import tqdm
@@ -17,10 +17,10 @@ import urllib
 from os.path import exists
 
 file_exists = exists("network-snapshot-025000.pkl")
-
 if file_exists != True:
-    url="https://livejohnshopkins-my.sharepoint.com/personal/ehalper2_jh_edu/Documents/network-snapshot-025000.pkl"
-    urllib.request.urlretrieve(url,"network-snapshot-025000.pkl")
+    url="https://drive.google.com/u/0/uc?id=1XUYsXdSGVTTaQPR1TujMwRIVn94H6CuG&export=download"
+    st.spinner('Downloading our pkl file model')
+    gdown.download(url,"network-snapshot-025000.pkl")
 make=st.button('make images')
 
 
