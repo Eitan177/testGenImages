@@ -286,37 +286,7 @@ def zs_to_ws(G,device,label,truncation_psi,zs):
         ws.append(w)
     return ws
 
-#----------------------------------------------------------------------------
 
-@click.command()
-@click.pass_context
-@click.option('--network', 'network_pkl', help='Network pickle filename', required=True)
-@click.option('--seeds', type=num_range, help='List of random seeds')
-@click.option('--trunc', 'truncation_psi', type=float, help='Truncation psi', default=1, show_default=True)
-@click.option('--class', 'class_idx', type=int, help='Class label (unconditional if not specified)')
-@click.option('--diameter', type=float, help='diameter of loops', default=100.0, show_default=True)
-@click.option('--frames', type=int, help='how many frames to produce (with seeds this is frames between each step, with loops this is total length)', default=240, show_default=True)
-@click.option('--fps', type=int, help='framerate for video', default=24, show_default=True)
-@click.option('--increment', type=float, help='truncation increment value', default=0.01, show_default=True)
-@click.option('--interpolation', type=click.Choice(['linear', 'slerp', 'noiseloop', 'circularloop']), default='linear', help='interpolation type', required=True)
-@click.option('--easing',
-              type=click.Choice(['linear', 'easeInOutQuad', 'bounceEaseOut','circularEaseOut','circularEaseOut2']),
-              default='linear', help='easing method', required=True)
-@click.option('--network', 'network_pkl', help='Network pickle filename', required=True)
-@click.option('--noise-mode', help='Noise mode', type=click.Choice(['const', 'random', 'none']), default='const', show_default=True)
-@click.option('--outdir', help='Where to save the output images', type=str, required=True, metavar='DIR')
-@click.option('--process', type=click.Choice(['image', 'interpolation','truncation','interpolation-truncation']), default='image', help='generation method', required=True)
-@click.option('--projected-w', help='Projection result file', type=str, metavar='FILE')
-@click.option('--random_seed', type=int, help='random seed value (used in noise and circular loop)', default=0, show_default=True)
-@click.option('--scale-type',
-                type=click.Choice(['pad', 'padside', 'symm','symmside']),
-                default='pad', help='scaling method for --size', required=False)
-@click.option('--size', type=size_range, help='size of output (in format x-y)')
-@click.option('--seeds', type=num_range, help='List of random seeds')
-@click.option('--space', type=click.Choice(['z', 'w']), default='z', help='latent space', required=True)
-@click.option('--start', type=float, help='starting truncation value', default=0.0, show_default=True)
-@click.option('--stop', type=float, help='stopping truncation value', default=1.0, show_default=True)
-@click.option('--trunc', 'truncation_psi', type=float, help='Truncation psi', default=1, show_default=True)
 
 def generate_images(
     easing: str,
