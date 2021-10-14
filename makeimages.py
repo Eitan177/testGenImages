@@ -2,7 +2,7 @@ from typing import Pattern
 import numpy as np
 import pandas as pd
 import pdb
-import openslide
+
 import os
 from glob import glob
 from tqdm import tqdm
