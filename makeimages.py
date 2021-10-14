@@ -28,7 +28,7 @@ make=st.button('make images')
 if make:
 
     for ii in np.arange(1,2):
-        generate_images('linear',.01,'network-snapshot-025000.pkl','image',0,100.0,'pad',seeds=[0,1,2,3],space='z',truncation_psi=1,noise_mode='const',outdir='.',class_idx=ii)
+        generate_images(easing='linear',interpolation='linear',increment=.01,network_pkl='network-snapshot-025000.pkl',process='image',random_seed=0,diameter=100.0,scale_type='pad',seeds=[0,1,2,3],space='z',truncation_psi=1,noise_mode='const',outdir='.',class_idx=ii)
         ##os.system("python generate.py --outdir=. --seeds="+str(0)+"-"+str(9)+" --class="+str(ii)+' --network=network-snapshot-025000.pkl')
 
 
