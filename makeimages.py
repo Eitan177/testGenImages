@@ -16,7 +16,7 @@ from PIL import Image
 import streamlit as st
 import urllib
 from os.path import exists
-import generate
+from generate import *
 
 file_exists = exists("network-snapshot-025000.pkl")
 if file_exists != True:
