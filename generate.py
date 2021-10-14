@@ -319,7 +319,6 @@ def zs_to_ws(G,device,label,truncation_psi,zs):
 @click.option('--trunc', 'truncation_psi', type=float, help='Truncation psi', default=1, show_default=True)
 
 def generate_images(
-    ctx: click.Context,
     easing: str,
     interpolation: str,
     increment: Optional[float],
