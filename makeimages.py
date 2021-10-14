@@ -35,3 +35,4 @@ for mm in glob("*.png"):
     print(mm)
     im=Image.open(mm)
     st.image(im)
+os.system('rm *png')
