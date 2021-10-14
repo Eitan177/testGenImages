@@ -394,7 +394,7 @@ def generate_images(
         return
 
     # Labels.
-    label = torch.zeros([1, G.c_dim]), device=device)
+    label = torch.zeros([1, G.c_dim], device=device)
     if G.c_dim != 0:
         if class_idx is None:
             print('Must specify class label with --class when using a conditional network')
@@ -411,7 +411,7 @@ def generate_images(
         # Generate images.
         for seed_idx, seed in enumerate(seeds):
             print('Generating image for seed %d (%d/%d) ...' % (seed, seed_idx, len(seeds)))
-            z = torch.from_numpy(np.random.RandomState(seed).randn(1, G.z_dim)).to(device)
+            z = torch.from_numpy(np.random.RandomState(seed).randn(1, G.z_dim).to(device)
             img = G(z, label, truncation_psi=truncation_psi, noise_mode=noise_mode,force_fp32=True)
             img = (img.permute(0, 2, 3, 1) * 127.5 + 128).clamp(0, 255).to(torch.uint8)
             PIL.Image.fromarray(img[0].cpu().numpy(), 'RGB').save(f'{outdir}/seed{seed:04d}.png')
