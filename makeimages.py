@@ -56,28 +56,6 @@ make=st.button('make images')
 @click.option('--stop', type=float, help='stopping truncation value', default=1.0, show_default=True)
 @click.option('--trunc', 'truncation_psi', type=float, help='Truncation psi', default=1, show_default=True)
 
-
-easing: str,
-    interpolation: str,
-    increment: Optional[float],
-    network_pkl: str,
-    process: str,
-    random_seed: Optional[int],
-    diameter: Optional[float],
-    scale_type: Optional[str],
-    size: Optional[List[int]],
-    seeds: Optional[List[int]],
-    space: str,
-    fps: Optional[int],
-    frames: Optional[int],
-    truncation_psi: float,
-    noise_mode: str,
-    outdir: str,
-    class_idx: Optional[int],
-    projected_w: Optional[str],
-    start: Optional[float],
-    stop: Optional[float],
-
 if make:
 
     for ii in np.arange(1,2):
