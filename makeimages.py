@@ -36,3 +36,5 @@ for mm in glob("*.png"):
     im=Image.open(mm)
     st.image(im)
 os.system('rm *png')
+st.spinner('give this a few seconds...')
+st.sleep(10)
