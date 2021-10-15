@@ -8,7 +8,6 @@ import os
 from glob import glob
 from tqdm import tqdm
 from matplotlib import pyplot as plt
-import tensorflow as tf
 from glob import glob
 import sys
 from skimage.transform import rescale, resize, downscale_local_mean
