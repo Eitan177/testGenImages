@@ -415,6 +415,10 @@ def generate_images(
             img = G(z, label, truncation_psi=truncation_psi, noise_mode=noise_mode, force_fp32=True)
             img = (img.permute(0, 2, 3, 1) * 127.5 + 128).clamp(0, 255).to(torch.uint8)
             PIL.Image.fromarray(img[0].cpu().numpy(), 'RGB').save(f'{outdir}/seed{seed:04d}.png')
+            del img
+            del z
+        del network_pkl
+        del G
 
     elif(process=='interpolation' or process=='interpolation-truncation'):
         # create path for frames
