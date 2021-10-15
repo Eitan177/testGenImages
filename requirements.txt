@@ -40,10 +40,6 @@ h5py==3.1.0
 idna==2.7
 imageio==2.9.0
 imageio-ffmpeg==0.4.3
-ipykernel==6.4.1
-ipython==7.28.0
-ipython-genutils==0.2.0
-ipywidgets==7.6.5
 itsdangerous==2.0.1
 jedi==0.18.0
 Jinja2==3.0.1
