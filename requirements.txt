@@ -125,5 +125,5 @@ Werkzeug==2.0.1
 widgetsnbextension==3.5.1
 wrapt==1.12.1
 --find-links https://download.pytorch.org/whl/torch_stable.html
-torch==1.9.1+cpu
+torch==1.7.1+cpu
 torchvision==0.8.2+cpu
