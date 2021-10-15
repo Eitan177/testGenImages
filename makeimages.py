@@ -12,7 +12,6 @@ from matplotlib import pyplot as plt
 from glob import glob
 import sys
 from skimage.transform import rescale, resize, downscale_local_mean
-from keras.models import model_from_json
 from PIL import Image
 import streamlit as st
 import urllib
