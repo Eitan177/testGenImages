@@ -85,7 +85,7 @@ def circular_interpolation(radius, latents_persistent, latents_interpolate):
     latents = latents_a + latents_x * latents_axis_x + latents_y * latents_axis_y
     return latents
 
-@st.cache
+st.cache({hash_funcs={torch.nn.parameter.Parameter: id})
 def load_model(network_pkl,device,**G_kwargs):
     with dnnlib.util.open_url(network_pkl) as f:
         return(legacy.load_network_pkl(f, custom=False, **G_kwargs)['G_ema'].to(device)) # type: ignore
