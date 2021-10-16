@@ -41,7 +41,7 @@ def load_network_pkl(f, force_fp16=False, custom=False, **ex_kwargs):
     else:
 # !!! custom
         if custom is True:
-            G_ema = custom_generator(data, **ex_kwargs)
+            G_ema = ''#custom_generator(data, **ex_kwargs)
             data = dict(G_ema=G_ema)
             nets = ['G_ema']
         else:
