@@ -19,7 +19,7 @@ import numpy as np
 from numpy import linalg
 import PIL.Image
 import torch
-
+import streamlit as st
 import legacy
 
 from opensimplex import OpenSimplex
@@ -84,6 +84,11 @@ def circular_interpolation(radius, latents_persistent, latents_interpolate):
 
     latents = latents_a + latents_x * latents_axis_x + latents_y * latents_axis_y
     return latents
+
+@st.cache
+def load_model(network_pkl):
+    with dnnlib.util.open_url(network_pkl) as f:
+    return(legacy.load_network_pkl(f, custom=False, **G_kwargs)['G_ema'].to(device)) # type: ignore
 
 def num_range(s: str) -> List[int]:
     '''Accept either a comma separated list of numbers 'a,b,c' or a range 'a-c' and return as a list of ints.'''
@@ -373,9 +378,10 @@ def generate_images(
     print('Loading networks from "%s"...' % network_pkl)
     device = torch.device('cpu')
     #device = torch.device('cuda')
-    with dnnlib.util.open_url(network_pkl) as f:
-        # G = legacy.load_network_pkl(f)['G_ema'].to(device) # type: ignore
-        G = legacy.load_network_pkl(f, custom=custom, **G_kwargs)['G_ema'].to(device) # type: ignore
+    G = load_model(network_pkl)
+    #with dnnlib.util.open_url(network_pkl) as f:
+    #    # G = legacy.load_network_pkl(f)['G_ema'].to(device) # type: ignore
+    #    G = legacy.load_network_pkl(f, custom=custom, **G_kwargs)['G_ema'].to(device) # type: ignore
 
     os.makedirs(outdir, exist_ok=True)
 
