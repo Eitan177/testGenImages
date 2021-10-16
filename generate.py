@@ -86,7 +86,7 @@ def circular_interpolation(radius, latents_persistent, latents_interpolate):
     return latents
 
 @st.cache
-def load_model(network_pkl):
+def load_model(network_pkl,**G_kwargs):
     with dnnlib.util.open_url(network_pkl) as f:
         return(legacy.load_network_pkl(f, custom=False, **G_kwargs)['G_ema'].to(device)) # type: ignore
 
@@ -378,7 +378,7 @@ def generate_images(
     print('Loading networks from "%s"...' % network_pkl)
     device = torch.device('cpu')
     #device = torch.device('cuda')
-    G = load_model(network_pkl)
+    G = load_model(network_pkl,**G_kwargs)
     #with dnnlib.util.open_url(network_pkl) as f:
     #    # G = legacy.load_network_pkl(f)['G_ema'].to(device) # type: ignore
     #    G = legacy.load_network_pkl(f, custom=custom, **G_kwargs)['G_ema'].to(device) # type: ignore
