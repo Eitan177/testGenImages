@@ -88,7 +88,7 @@ def circular_interpolation(radius, latents_persistent, latents_interpolate):
 @st.cache
 def load_model(network_pkl):
     with dnnlib.util.open_url(network_pkl) as f:
-    return(legacy.load_network_pkl(f, custom=False, **G_kwargs)['G_ema'].to(device)) # type: ignore
+        return(legacy.load_network_pkl(f, custom=False, **G_kwargs)['G_ema'].to(device)) # type: ignore
 
 def num_range(s: str) -> List[int]:
     '''Accept either a comma separated list of numbers 'a,b,c' or a range 'a-c' and return as a list of ints.'''
