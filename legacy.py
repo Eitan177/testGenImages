@@ -222,7 +222,8 @@ def convert_tf_generator(tf_G, custom=False, **ex_kwargs):
 
     # Convert params.
     if custom:
-        from training import stylegan2_multi as networks
+        print()
+        #from training import stylegan2_multi as networks
     else:
         from training import networks
     G = networks.Generator(**kwargs).eval().requires_grad_(False)
