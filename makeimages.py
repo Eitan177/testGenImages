@@ -18,7 +18,7 @@ import urllib
 from os.path import exists
 import time
 from generate import *
-
+from training import networks
 
 
 file_exists = exists("network-snapshot-025000.pkl")
