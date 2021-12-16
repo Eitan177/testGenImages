@@ -46,9 +46,9 @@ def main():
     #os.system('rm network-snapshot-025000.pkl')
     for mm in glob("*.png"):
         print(mm)
-        im=Image.open(mm)
-        st.image(im)
-        del im
+        #im=Image.open(mm)
+        #st.image(im)
+        #del im
     del mm
     os.system('rm *png')
   
