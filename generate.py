@@ -19,7 +19,7 @@ import numpy as np
 from numpy import linalg
 import PIL.Image
 import torch
-import streamlit as st
+
 import legacy
 
 from opensimplex import OpenSimplex
@@ -84,12 +84,6 @@ def circular_interpolation(radius, latents_persistent, latents_interpolate):
 
     latents = latents_a + latents_x * latents_axis_x + latents_y * latents_axis_y
     return latents
-
-st.cache(hash_funcs={torch.nn.parameter.Parameter: id})
-def load_model(network_pkl,device,**G_kwargs):
-    print('loading')
-    with dnnlib.util.open_url(network_pkl) as f:
-        return(legacy.load_network_pkl(f, custom=False, **G_kwargs)['G_ema'].to(device)) # type: ignore
 
 def num_range(s: str) -> List[int]:
     '''Accept either a comma separated list of numbers 'a,b,c' or a range 'a-c' and return as a list of ints.'''
@@ -292,9 +286,40 @@ def zs_to_ws(G,device,label,truncation_psi,zs):
         ws.append(w)
     return ws
 
+#----------------------------------------------------------------------------
 
+@click.command()
+@click.pass_context
+@click.option('--network', 'network_pkl', help='Network pickle filename', required=True)
+@click.option('--seeds', type=num_range, help='List of random seeds')
+@click.option('--trunc', 'truncation_psi', type=float, help='Truncation psi', default=1, show_default=True)
+@click.option('--class', 'class_idx', type=int, help='Class label (unconditional if not specified)')
+@click.option('--diameter', type=float, help='diameter of loops', default=100.0, show_default=True)
+@click.option('--frames', type=int, help='how many frames to produce (with seeds this is frames between each step, with loops this is total length)', default=240, show_default=True)
+@click.option('--fps', type=int, help='framerate for video', default=24, show_default=True)
+@click.option('--increment', type=float, help='truncation increment value', default=0.01, show_default=True)
+@click.option('--interpolation', type=click.Choice(['linear', 'slerp', 'noiseloop', 'circularloop']), default='linear', help='interpolation type', required=True)
+@click.option('--easing',
+              type=click.Choice(['linear', 'easeInOutQuad', 'bounceEaseOut','circularEaseOut','circularEaseOut2']),
+              default='linear', help='easing method', required=True)
+@click.option('--network', 'network_pkl', help='Network pickle filename', required=True)
+@click.option('--noise-mode', help='Noise mode', type=click.Choice(['const', 'random', 'none']), default='const', show_default=True)
+@click.option('--outdir', help='Where to save the output images', type=str, required=True, metavar='DIR')
+@click.option('--process', type=click.Choice(['image', 'interpolation','truncation','interpolation-truncation']), default='image', help='generation method', required=True)
+@click.option('--projected-w', help='Projection result file', type=str, metavar='FILE')
+@click.option('--random_seed', type=int, help='random seed value (used in noise and circular loop)', default=0, show_default=True)
+@click.option('--scale-type',
+                type=click.Choice(['pad', 'padside', 'symm','symmside']),
+                default='pad', help='scaling method for --size', required=False)
+@click.option('--size', type=size_range, help='size of output (in format x-y)')
+@click.option('--seeds', type=num_range, help='List of random seeds')
+@click.option('--space', type=click.Choice(['z', 'w']), default='z', help='latent space', required=True)
+@click.option('--start', type=float, help='starting truncation value', default=0.0, show_default=True)
+@click.option('--stop', type=float, help='stopping truncation value', default=1.0, show_default=True)
+@click.option('--trunc', 'truncation_psi', type=float, help='Truncation psi', default=1, show_default=True)
 
 def generate_images(
+    ctx: click.Context,
     easing: str,
     interpolation: str,
     increment: Optional[float],
@@ -377,12 +402,10 @@ def generate_images(
     # lmask = torch.from_numpy(lmask).to(device)
 
     print('Loading networks from "%s"...' % network_pkl)
-    device = torch.device('cpu')
-    #device = torch.device('cuda')
-    G = load_model(network_pkl,device,**G_kwargs)
-    #with dnnlib.util.open_url(network_pkl) as f:
-    #    # G = legacy.load_network_pkl(f)['G_ema'].to(device) # type: ignore
-    #    G = legacy.load_network_pkl(f, custom=custom, **G_kwargs)['G_ema'].to(device) # type: ignore
+    device = torch.device('cuda')
+    with dnnlib.util.open_url(network_pkl) as f:
+        # G = legacy.load_network_pkl(f)['G_ema'].to(device) # type: ignore
+        G = legacy.load_network_pkl(f, custom=custom, **G_kwargs)['G_ema'].to(device) # type: ignore
 
     os.makedirs(outdir, exist_ok=True)
 
@@ -404,7 +427,7 @@ def generate_images(
     label = torch.zeros([1, G.c_dim], device=device)
     if G.c_dim != 0:
         if class_idx is None:
-            print('Must specify class label with --class when using a conditional network')
+            ctx.fail('Must specify class label with --class when using a conditional network')
         label[:, class_idx] = 1
     else:
         if class_idx is not None:
@@ -413,19 +436,15 @@ def generate_images(
 
     if(process=='image'):
         if seeds is None:
-            print('--seeds option is required when not using --projected-w')
+            ctx.fail('--seeds option is required when not using --projected-w')
 
         # Generate images.
         for seed_idx, seed in enumerate(seeds):
             print('Generating image for seed %d (%d/%d) ...' % (seed, seed_idx, len(seeds)))
             z = torch.from_numpy(np.random.RandomState(seed).randn(1, G.z_dim)).to(device)
-            img = G(z, label, truncation_psi=truncation_psi, noise_mode=noise_mode, force_fp32=True)
+            img = G(z, label, truncation_psi=truncation_psi, noise_mode=noise_mode)
             img = (img.permute(0, 2, 3, 1) * 127.5 + 128).clamp(0, 255).to(torch.uint8)
             PIL.Image.fromarray(img[0].cpu().numpy(), 'RGB').save(f'{outdir}/seed{seed:04d}.png')
-            del img
-            del z
-        del network_pkl
-        del G
 
     elif(process=='interpolation' or process=='interpolation-truncation'):
         # create path for frames
@@ -466,7 +485,6 @@ def generate_images(
         # convert to video
         cmd=f'ffmpeg -y -r {fps} -i {dirpath}/frame%04d.png -vcodec libx264 -pix_fmt yuv420p {outdir}/{vidname}.mp4'
         subprocess.call(cmd, shell=True)
-        del network_pkl
 
 #----------------------------------------------------------------------------
 
