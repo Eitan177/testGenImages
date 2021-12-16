@@ -14,11 +14,14 @@ import sys
 from skimage.transform import rescale, resize, downscale_local_mean
 from PIL import Image
 import streamlit as st
+from streamlit import caching
 import urllib
 from os.path import exists
 import time
 from generate import *
 from training import networks
+
+caching.clear_cache()
 
 @st.cache()
 def get_net():
